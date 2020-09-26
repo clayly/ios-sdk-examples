@@ -32,6 +32,13 @@ class TextFormattingExample_Swift: UIViewController {
 
     // Format label's text based on the selected index of the UISegmentedControl
     @objc func formatText(sender: UISegmentedControl) {
+        let url0 = "https://wanderdrone.appspot.com/"
+        let url1 = "http://192.168.0.168:8080/feature/"
+        let url2 = "http://192.168.0.168:8080/featureCollection/"
+        guard let url = URL(string: url2) else {
+            return
+        }
+        let stateSource = MGLShapeSource.init(identifier: "", url: url, options: nil)
         let stateLayer = mapView.style?.layer(withIdentifier: "state-label") as? MGLSymbolStyleLayer
         var expression: NSExpression = NSExpression(forConstantValue: "")
 

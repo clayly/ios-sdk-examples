@@ -1036,7 +1036,7 @@
 					};
 					9619628B1C581700002D3DAB = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = GJZR2MEM28;
+						DevelopmentTeam = D92LL3BJ8T;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -1211,16 +1211,16 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Examples/Pods-Examples-frameworks.sh",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/93C58D95-90B9-30C8-8F60-4BDE32FD7E8E.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/BB87D8DD-493F-37AA-BD21-2BC609B8311B.bcsymbolmap",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/013BB2AF-5C29-3EC8-9510-8B78BB76D0B0.bcsymbolmap",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/CC443EEC-DF0E-3CA1-A893-191C118B9623.bcsymbolmap",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
-				"${BUILT_PRODUCTS_DIR}/93C58D95-90B9-30C8-8F60-4BDE32FD7E8E.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/BB87D8DD-493F-37AA-BD21-2BC609B8311B.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/013BB2AF-5C29-3EC8-9510-8B78BB76D0B0.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/CC443EEC-DF0E-3CA1-A893-191C118B9623.bcsymbolmap",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1252,16 +1252,16 @@
 				"${PODS_ROOT}/Target Support Files/Pods-DocsCode/Pods-DocsCode-frameworks.sh",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/93C58D95-90B9-30C8-8F60-4BDE32FD7E8E.bcsymbolmap",
-				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/BB87D8DD-493F-37AA-BD21-2BC609B8311B.bcsymbolmap",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/013BB2AF-5C29-3EC8-9510-8B78BB76D0B0.bcsymbolmap",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/CC443EEC-DF0E-3CA1-A893-191C118B9623.bcsymbolmap",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
 				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
-				"${BUILT_PRODUCTS_DIR}/93C58D95-90B9-30C8-8F60-4BDE32FD7E8E.bcsymbolmap",
-				"${BUILT_PRODUCTS_DIR}/BB87D8DD-493F-37AA-BD21-2BC609B8311B.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/013BB2AF-5C29-3EC8-9510-8B78BB76D0B0.bcsymbolmap",
+				"${BUILT_PRODUCTS_DIR}/CC443EEC-DF0E-3CA1-A893-191C118B9623.bcsymbolmap",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1727,15 +1727,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 98;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
+				CURRENT_PROJECT_VERSION = 0;
+				DEVELOPMENT_TEAM = D92LL3BJ8T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Examples/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
+				PRODUCT_BUNDLE_IDENTIFIER = zva.com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1750,15 +1750,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 98;
-				DEVELOPMENT_TEAM = GJZR2MEM28;
+				CURRENT_PROJECT_VERSION = 0;
+				DEVELOPMENT_TEAM = D92LL3BJ8T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Examples/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.examples;
+				PRODUCT_BUNDLE_IDENTIFIER = zva.com.mapbox.examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
