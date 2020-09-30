@@ -130,12 +130,31 @@ public func allEmojis() -> [String] {
 
 extension String {
     func emojiToImage() -> UIImage? {
-        let size = CGSize(width: 30, height: 30)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        UIColor.clear.set()
+        let size = CGSize(width: 48, height: 48)
         let rect = CGRect(origin: .zero, size: size)
-        UIRectFill(CGRect(origin: .zero, size: size))
-        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: 24)])
+        let textAttributes = [
+            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24),
+            NSAttributedString.Key.foregroundColor: UIColor.blue
+        ]
+        let textSize = (self as NSString).size(withAttributes: textAttributes)
+
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let ctx = UIGraphicsGetCurrentContext()
+        ctx?.saveGState()
+//        UIColor.clear.set()
+        ctx?.setFillColor(UIColor.white.cgColor)
+        ctx?.fillEllipse(in: rect)
+        ctx?.restoreGState()
+//        UIRectFill(CGRect(origin: .zero, size: size))
+        self.draw(
+            in: CGRect.init(
+                x: (size.width - textSize.width) / 2,
+                y: (size.width - textSize.width) / 2,
+                width: textSize.width,
+                height: textSize.height
+            ),
+            withAttributes: textAttributes
+        )
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
