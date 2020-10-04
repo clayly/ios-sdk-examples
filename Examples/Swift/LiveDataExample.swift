@@ -1,20 +1,23 @@
 import Mapbox
+import APNGKit
 
 @objc(LiveDataExample_Swift)
 
 class LiveDataExample: UIViewController, MGLMapViewDelegate {
 
-    var source: MGLShapeSource!
-    var mapped: [ZvaAnnotation] = []
     var mapView: MGLMapView?
-    var timer = Timer()
+    var source: MGLShapeSource?
+    var mapped: [ZTag] = []
+    var timerMedium = Timer()
+    var timerShort = Timer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Create a new map view using the Mapbox Dark style.
         mapView = MGLMapView(frame: view.bounds,
-                                 styleURL: MGLStyle.darkStyleURL(withVersion: 9))
+                             styleURL: MGLStyle.streetsStyleURL) // looks like ot is most simple style from available
+//                             styleURL: MGLStyle.darkStyleURL(withVersion: 9))
         mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView?.tintColor = .gray
 
@@ -24,35 +27,36 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        NSLog("didFinishLoading")
         let url0 = "https://wanderdrone.appspot.com/"
         let url1 = "http://192.168.0.168:8080/feature/"
         let url2 = "http://192.168.0.168:8080/featureCollection/"
-        guard let url = URL(string: url2) else {
-            return
-        }
+        guard let url = URL(string: url2) else { return }
+
+        //        var coors = [
+        //            CLLocationCoordinate2D.init(latitude: 30, longitude: 30),
+        //            CLLocationCoordinate2D.init(latitude: 31, longitude: 31)
+        //        ]
+        //        let polygonFeature = MGLPolygonFeature.init(coordinates: &coors, count: UInt(coors.count))
+        //        let emptyFeature = MGLEmptyFeature.init()
+
+        //
+        //        let features: [MGLShape & MGLFeature] = [
+        //            polygonFeature,
+        //            emptyFeature,
+        //        ]
+
         // Add a source to the map. https://wanderdrone.appspot.com/ generates coordinates for simulated paths.
         source = MGLShapeSource(identifier: "wanderdrone", url: url, options: nil)
-
-//        var coors = [
-//            CLLocationCoordinate2D.init(latitude: 30, longitude: 30),
-//            CLLocationCoordinate2D.init(latitude: 31, longitude: 31)
-//        ]
-//        let polygonFeature = MGLPolygonFeature.init(coordinates: &coors, count: UInt(coors.count))
-//        let emptyFeature = MGLEmptyFeature.init()
-
-//
-//        let features: [MGLShape & MGLFeature] = [
-//            polygonFeature,
-//            emptyFeature,
-//        ]
 //        source = MGLShapeSource.init(identifier: "zva", features: features, options: nil)
-
+        guard let source = source else { return }
         style.addSource(source)
 
-        // Add a Maki icon to the map to represent the drone's coordinate. The specified icon is included in the Mapbox Dark style's sprite sheet. For more information about Maki icons, see   https://www.mapbox.com/maki-icons/
+        // Add a Maki icon to the map to represent the drone's coordinate.
+        // The specified icon is included in the Mapbox Dark style's sprite sheet.
+        // For more information about Maki icons, see   https://www.mapbox.com/maki-icons/
 //        let droneLayer = MGLSymbolStyleLayer(identifier: "wanderdrone", source: source)
         let droneLayer = MGLSymbolStyleLayer(identifier: "wanderdrone", source: source)
-
 //        droneLayer.iconImageName = NSExpression(forConstantValue: "rocket-15")
 //        droneLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
 
@@ -74,7 +78,6 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
             guard let icon = emoji.emojiToImage() else { return }
             style.setImage(icon, forName: emoji)
         }
-
         NSLog("emojis count \(emojis.count)")
 
 //        let icons = [ firstStr: firstStr, secondStr: secondStr ]
@@ -94,30 +97,48 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
 
         style.addLayer(droneLayer)
 
-        onAnnotationsFetched([ZvaAnnotation.init(zvaID: 0, coordinates: CLLocationCoordinate2D.init(latitude: CLLocationDegrees.init(0), longitude: CLLocationDegrees.init(0)), zvaAnnotationView: nil)])
-
         // Create a timer that calls the `updateUrl` function every 1.5 seconds.
-        timer.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateUrl), userInfo: nil, repeats: true)
+//        timerShort.invalidate()
+//        timerShort = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateAnnotations), userInfo: nil, repeats: true)
+        timerMedium.invalidate()
+        timerMedium = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateStyles), userInfo: nil, repeats: true)
     }
 
-    @objc func updateUrl() {
+    @objc func updateAnnotations() {
+        onAnnotationsFetched(
+            [
+                ZTag.init(
+                    zID: Int.random(in: 0...20),
+                    coordinates: CLLocationCoordinate2D.init(
+                        latitude: CLLocationDegrees.init(Int.random(in: -30...30)),
+                        longitude: CLLocationDegrees.init(Int.random(in: -30...30))
+                    )
+                )
+            ]
+        )
+    }
+
+    @objc func updateStyles() {
         // Update the icon's position by setting the `url` property on the source.
-        source.url = source.url
+        source?.url = source?.url
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         // Invalidate the timer if the view will disappear.
-        timer.invalidate()
-        timer = Timer()
+        timerShort.invalidate()
+        timerShort = Timer()
+        timerMedium.invalidate()
+        timerMedium = Timer()
     }
 
     func mapView(_ mapView: MGLMapView, didAdd annotationViews: [MGLAnnotationView]) {
-        guard let annotations = annotationViews as? [ZvaAnnotationView] else { return }
-        annotations.forEach { $0.zvaAnimation() }
+        NSLog("didAdd annotationViews")
+        guard let annotationViews = annotationViews as? [ZView] else { return }
+        annotationViews.forEach { $0.zvaAnimation() }
     }
 
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        NSLog("viewFor annotation")
         guard let point = annotation as? MGLPointAnnotation else { return nil }
 
         // Use the point annotation’s longitude value (as a string) as the reuse identifier for its view.
@@ -129,7 +150,7 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
 
         // If there’s no reusable annotation view available, initialize a new one.
         if annotationView == nil {
-            annotationView = ZvaAnnotationView(reuseIdentifier: reuseID)
+            annotationView = ZView(reuseIdentifier: reuseID)
             annotationView?.bounds = CGRect(x: 0, y: 0, width: 52, height: 52)
 
             // Set the annotation view’s background color to a value determined by its longitude.
@@ -137,8 +158,8 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
             //annotationView!.backgroundColor = UIColor(hue: hue, saturation: 0.5, brightness: 1, alpha: 1)
         }
 
-        if let annotationView = annotationView as? ZvaAnnotationView {
-            let zvaAnnotation = mapped.first { $0.zvaID == Int(point.subtitle!) }
+        if let annotationView = annotationView as? ZView {
+            let zvaAnnotation = mapped.first { $0.zID == Int(point.subtitle!) }
             annotationView.zvaConfigureWith(zvaAnnotation)
         }
 
@@ -147,57 +168,105 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
 
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         NSLog("regionDidChangeAnimated")
+        updateAnnotations()
     }
 
-    func onAnnotationsFetched(_ fetched: [ZvaAnnotation]) {
-        let fresh = fetched.filter { !mapped.contains($0)}
+    func onAnnotationsFetched(_ fetched: [ZTag]) {
+        NSLog("onAnnotationsFetched")
+        var fresh = fetched.filter { !mapped.contains($0)}
         let outdated = mapped.filter { !fetched.contains($0)}
-
-        mapView?.removeAnnotations(outdated.compactMap { $0.zvaAnnotationView?.annotation })
+        mapView?.removeAnnotations(outdated.compactMap { $0.annotation })
         mapped = mapped.filter { !outdated.contains($0) }
 
-        var points = [MGLPointAnnotation]()
-
+        var annotations = [MGLPointAnnotation]()
         for index in 0..<fresh.count {
-            let point = MGLPointAnnotation()
-            point.coordinate = fresh[index].coordinates
-            point.title = "\(fresh[index].coordinates.latitude), \(fresh[index].coordinates.longitude)"
-            point.subtitle = "\(fresh[index].zvaID)"
-            points.append(point)
-            fresh[index].zvaAnnotationView?.annotation = point
+            let annotation = MGLPointAnnotation()
+            annotation.coordinate = fresh[index].coordinates
+            annotation.title = "\(fresh[index].coordinates.latitude), \(fresh[index].coordinates.longitude)"
+            annotation.subtitle = "\(fresh[index].zID)"
+            annotations.append(annotation)
+            fresh[index].annotation = annotation
         }
 
         mapped.append(contentsOf: fresh)
-
-        mapView?.addAnnotations(points)
-        NSLog("setNewAnnotations localPins: \(mapped.count) added: \(points.count) onMap: \(mapView?.annotations?.count)")
+        mapView?.addAnnotations(annotations)
+        NSLog("setNewAnnotations fresh: \(fresh.count), outdated: \(outdated.count), mapped: \(mapped.count), onMap: \(mapView?.annotations?.count)")
     }
 }
 
-struct ZvaAnnotation: Equatable {
-    let zvaID: Int
+struct ZTag: Equatable {
+
+    let zID: Int
     let coordinates: CLLocationCoordinate2D
-    var zvaAnnotationView: ZvaAnnotationView?
+    var annotation: MGLPointAnnotation?
 
-    static func == (lsh: ZvaAnnotation, rhs: ZvaAnnotation) -> Bool {
-        return lsh.zvaID == rhs.zvaID
+    static func == (lsh: ZTag, rhs: ZTag) -> Bool {
+        return lsh.zID == rhs.zID
     }
-
 }
 
-class ZvaAnnotationView: MGLAnnotationView {
-    var zvaAnnotation: ZvaAnnotation?
-    func zvaConfigureWith(_ zvaAnnotation: ZvaAnnotation?) {
+class ZView: MGLAnnotationView {
+
+    static let imageName = "test-elephant"
+//    static let imageName = "test-png"
+//    static let imageName = "test-circle-progress"
+
+    var imageView: APNGImageView?
+//    var imageView: UIView?
+
+    var zvaAnnotation: ZTag?
+
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        NSLog("override init(reuseIdentifier: String?)")
+        setupViews()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        NSLog("required init?(coder: NSCoder)")
+        setupViews()
+    }
+
+    private func setupViews() {
+        backgroundColor = .white
+        let img = UIImage.init(named: ZView.imageName)
+        if (img == nil) {
+            NSLog("ERROR \(ZView.imageName) img == nil")
+        } else {
+            NSLog("ERROR \(ZView.imageName) img == nil")
+        }
+        let apngImg = APNGImage(named: ZView.imageName)
+        if (apngImg == nil) {
+            NSLog("ERROR \(ZView.imageName) apngImg == nil")
+        } else {
+            NSLog("ERROR \(ZView.imageName) apngImg == nil")
+        }
+        imageView = APNGImageView(image: apngImg)
+//        imageView = UIImageView.init(image: img)
+        imageView?.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imageView!)
+        NSLayoutConstraint.activate(imageView!.zFill(boundsOf: self))
+    }
+
+    func zvaConfigureWith(_ zvaAnnotation: ZTag?) {
         NSLog("zvaConfigure")
         self.zvaAnnotation = zvaAnnotation
-        self.zvaAnnotation?.zvaAnnotationView = self
     }
+
     func zvaAnimation() {
         NSLog("zvaAnimation")
+        imageView!.startAnimating()
     }
+
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        NSLog("didMoveToSuperview")
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        NSLog("layoutSubviews")
         // Use CALayer’s corner radius to turn this view into a circle.
         layer.cornerRadius = bounds.width / 2
         layer.borderWidth = 2
@@ -268,5 +337,21 @@ extension String {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image
+    }
+}
+
+
+extension UIView {
+    /// Returns a collection of constraints to anchor the bounds of the current view to the given view.
+    ///
+    /// - Parameter view: The view to anchor to.
+    /// - Returns: The layout constraints needed for this constraint.
+    func zFill(boundsOf view: UIView, offset: CGFloat = 0) -> [NSLayoutConstraint] {
+        return [
+            topAnchor.constraint(equalTo: view.topAnchor, constant: offset),
+            leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: offset),
+            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: offset),
+            trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: offset)
+        ]
     }
 }
