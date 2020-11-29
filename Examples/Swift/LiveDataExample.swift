@@ -19,10 +19,11 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
         // Create a new map view using the Mapbox Dark style.
         mapView = MGLMapView(
             frame: view.bounds,
-            // видимо предзаданные стили загружаются с серверов mapbox
-            // настройки стиля может влиять на производительность
-            // видимо можно настроить свой стиль
-            // и загружать его просто из ресурсов приложение (оффлайн)
+            // Видимо предзаданные стили загружаются с серверов mapbox.
+            // Настройки стиля могут влиять на производительность.
+            // Можно настроить свой стиль
+            // и загружать его из ресурсов приложения (оффлайн)
+            // либо с своего сервера.
             styleURL: MGLStyle.streetsStyleURL  // видимо это самый лёгкий из предзаданных стилей
 //            styleURL: MGLStyle.darkStyleURL(withVersion: 9)
         )
@@ -61,13 +62,7 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
         guard let source = source else { return }
         style.addSource(source)
 
-        // Add a Maki icon to the map to represent the drone's coordinate.
-        // The specified icon is included in the Mapbox Dark style's sprite sheet.
-        // For more information about Maki icons, see   https://www.mapbox.com/maki-icons/
-//        let droneLayer = MGLSymbolStyleLayer(identifier: "wanderdrone", source: source)
-        let droneLayer = MGLSymbolStyleLayer.init(identifier: "wanderdrone", source: source)
-//        droneLayer.iconImageName = NSExpression(forConstantValue: "rocket-15")
-//        droneLayer.iconHaloColor = NSExpression(forConstantValue: UIColor.white)
+        let droneLayer = MGLSymbolStyleLayer.init(identifier: "mapchat", source: source)
 
         // попытки добавлять вручную эмоджи в качестве пиктограммы
         // всё работает
@@ -100,7 +95,7 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
 
         NSLog("icons count \(iconsMap.count)")
 
-        // указываем для нашего слоя,
+        // конфигурируем слой: указываем,
         // откуда брать различные настройки отображения меток
         // выражение применяются для всех меток на этом слое
 
@@ -111,14 +106,24 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
         // пиктограмма, добавленная в данный стиль под именем "tag_image"
 //        droneLayer.iconImageName = NSExpression(forConstantValue: "tag_image")
 
+        // предустановленная пиктограмма
+        // Add a Maki icon to the map to represent the drone's coordinate.
+        // The specified icon is included in the Mapbox Dark style's sprite sheet.
+        // For more information about Maki icons, see https://www.mapbox.com/maki-icons/
+//        droneLayer.iconImageName = NSExpression(forConstantValue: "rocket-15")
+
         // текст берётся из GeoJSON { ... , properties: { name } } (см. url выше)
 //        droneLayer.text = NSExpression.init(forKeyPath: "name")
+
         // текст только такой
 //        droneLayer.text = NSExpression.init(forConstantValue: "name")
 
         // цвет текста только такой
 //        droneLayer.textColor = NSExpression.init(forConstantValue: UIColor.white)
 
+//        droneLayer.iconHaloColor = NSExpression.init(forConstantValue: UIColor.white)
+
+        // добавляем сконфигурированный слой к стилю карты
         style.addLayer(droneLayer)
 
         timerShort.invalidate()
@@ -127,20 +132,27 @@ class LiveDataExample: UIViewController, MGLMapViewDelegate {
         timerMedium = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(updateStyles), userInfo: nil, repeats: true)
     }
 
-    /// имитация добавления/обновления меток стилей
-    /// данные метки очень лёгкие по производительности
-    /// использовать по максимуму
+    /// Имитация добавления/обновления меток стиля.
+    /// Данные метки очень лёгкие по производительности.
+    /// Использовать по максимуму.
     @objc func updateStyles() {
         // Update the icon's position by setting the `url` property on the source.
-        // каждая установка этой переменной вызывает
+        // Каждая установка этой переменной вызывает
         // обращение по установленному пути, скачивание и обновление меток
+        // Если метки будут поставляться не в формате GeoJSON через свой кастомный сервер,
+        // то в этом месте нужно будет вызывать его, забирать метки, конвертировать в формат,
+        // который ожидают стили mapbox, и устанавливать их как-то по-другому.
+        // Возможно через удаление слоя и создани нового,
+        // так как метода для программной установки меток вроде бы нет.
+        // Возможно url может указывать на локальный файл,
+        // тогда можно использовать url на файл а метки записывать в него.
         source?.url = source?.url
     }
 
-    /// имитация добавления/обновления меток-аннотаций
-    /// данные метки тяжёлые по производительности
-    /// использовать ограниченно и только для анимированных меток (с кратким временем истечения)
-    /// в комбинации с метками стиля
+    /// Имитация добавления/обновления меток-аннотаций
+    /// данные метки тяжёлые по производительности.
+    /// Использовать ограниченно и только для анимированных меток (с кратким временем истечения)
+    /// в комбинации с метками стиля.
     @objc func updateAnnotations() {
         onAnnotationsFetched(
             // программно генерируем метки
