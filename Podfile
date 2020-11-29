@@ -4,7 +4,6 @@ use_frameworks!
 def shared_pods
     pod 'Mapbox-iOS-SDK', '6.2.1'
     pod 'SwiftLint'
-    pod 'APNGKit'
 end
 
 target 'Examples' do
